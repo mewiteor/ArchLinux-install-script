@@ -8,8 +8,11 @@
 # device name, eg. /dev/sdX
 SD=${SD:-""}
 
-# partition mode: USB_MBR USB_GPT MBR GPT BtrFS
+partition_modes=(USB_MBR USB_GPT MBR GPT BtrFS)
 PARTITION_MODE=${PARTITION_MODE:-""}
+
+virtual_machines=(None Hyper-V Virtual-Box VMWare)
+VIRTUAL_MACHINE=${VIRTUAL_MACHINE:-""}
 
 FS=/mnt/f
 ROOT=/mnt/r
@@ -25,9 +28,21 @@ done
 if [ -z "$PARTITION_MODE" ]
 then
     echo_info "PARTITION_MODE:"
-    select PARTITION_MODE in USB_MBR USB_GPT MBR GPT BtrFS
+    select PARTITION_MODE in ${partition_modes[@]}
     do
         if [ -n "$PARTITION_MODE" ]
+        then
+            break
+        fi
+    done
+fi
+
+if [ -z "$VIRTUAL_MACHINE" ]
+then
+    echo_info "VIRTUAL_MACHINE:"
+    select VIRTUAL_MACHINE in ${virtual_machines[@]}
+    do
+        if [ -n "$VIRTUAL_MACHINE" ]
         then
             break
         fi
@@ -60,6 +75,7 @@ esac
 
 echo_info "device: $SD"
 echo_info "partition mode: $PARTITION_MODE"
+echo_info "virtual machine: $VIRTUAL_MACHINE"
 
 CONFIG_FLAG="flag"
 

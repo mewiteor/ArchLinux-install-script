@@ -2,6 +2,7 @@
 
 SD=$1
 PARTITION_MODE=$2
+VIRTUAL_MACHINE=$3
 
 source /root/tmp/echo_config || exit 1
 source /root/tmp/env_config || exit 1
@@ -51,6 +52,14 @@ fi
 echo_finish "passwd"
 
 echo_start "grub-install and grub-mkconfig"
+case $VIRTUAL_MACHINE in
+    Hyper-V )
+        sed -i 's/^\(GRUB_CMDLINE_LINUX_DEFAULT="\)\(.*\)"$/\1\2 video=hyperv_fb:800x600"/g' $ROOT/etc/default/grub
+        ;;
+    Virtual-Box )
+        # load mod: vboxguest vboxsf vboxvideo
+        ;;
+esac
 GRUB_INSTALL_COMMAND=":"
 case $PARTITION_MODE in
     USB_MBR)
@@ -78,7 +87,12 @@ fi
 echo_finish "grub-install and grub-mkconfig"
 
 echo_start "pacman"
-INSTALL_PACKAGES=(zsh sudo vim git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget w3m ctags xorg-server xorg-xinit xf86-video-vesa lxde i3-wm i3lock i3status feh conky yaourt)
+INSTALL_PACKAGES=(zsh sudo vim git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget w3m ctags xorg-server xorg-xinit xf86-video-vesa xf86-video-fbdev lxde i3-wm i3lock i3status feh conky yaourt)
+case $VIRTUAL_MACHINE in
+    Virtual-Box )
+        INSTALL_PACKAGES+=(virtualbox-guest-utils)
+        ;;
+esac
 if ! {
     pacman -Syu &&
     yes ' ' | pacman -S ${INSTALL_PACKAGES[@]}
@@ -111,15 +125,21 @@ else
 fi
 
 echo_start "systemctl"
-if ! {
-    systemctl enable NetworkManager &&
-    systemctl start NetworkManager &&
-    systemctl enable sshd &&
-    systemctl start sshd
-}; then
-    echo_err "systemctl"
-    exit 1
-fi
+services=(NetworkManager sshd)
+case $VIRTUAL_MACHINE in
+    Virtual-Box )
+        services+=(vboxservice.service)
+        ;;
+esac
+for serv in ${services[@]}; do
+    if ! {
+        systemctl enable $serv &&
+        systemctl start $serv
+    }; then
+        echo_err "systemctl $serv"
+        exit 1
+    fi
+done
 echo_finish "systemctl"
 
 echo_start "su"

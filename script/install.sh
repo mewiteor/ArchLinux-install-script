@@ -2,6 +2,7 @@
 
 SD=$1
 PARTITION_MODE=$2
+VIRTUAL_MACHINE=$3
 
 source ../config/echo_config || exit 1
 source ../config/env_config || exit 1
@@ -69,6 +70,7 @@ if ! {
     mkdir -p $ROOT/root/tmp/x &&
     mkdir -p $ROOT/root/tmp/fonts &&
     cp $RESOURCE_DIR/zshrc $ROOT/root/tmp/zshrc &&
+    cp $RESOURCE_DIR/gitconfig $ROOT/root/tmp/gitconfig &&
     cp $SCRIPT_DIR/mew_install.sh $ROOT/root/tmp/mew_install.sh &&
     cp $RESOURCE_DIR/arch_vimrc $ROOT/root/tmp/vimrc &&
     cp $RESOURCE_DIR/root_vimrc $ROOT/root/tmp/vrc &&
@@ -83,7 +85,7 @@ if ! {
 fi
 echo_finish "cp"
 
-if ! arch-chroot $ROOT /bin/bash /root/root_install.sh $SD $PARTITION_MODE; then
+if ! arch-chroot $ROOT /bin/bash /root/root_install.sh $SD $PARTITION_MODE $VIRTUAL_MACHINE; then
     echo_err "arch-chroot"
     umount
     exit 1

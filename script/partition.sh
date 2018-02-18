@@ -2,6 +2,7 @@
 
 SD=$1
 PARTITION_MODE=$2
+VIRTUAL_MACHINE="None"
 
 source ../config/echo_config || exit 1
 source ../config/env_config || exit 1
