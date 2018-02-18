@@ -54,7 +54,7 @@ echo_finish "passwd"
 echo_start "grub-install and grub-mkconfig"
 case $VIRTUAL_MACHINE in
     Hyper-V )
-        sed -i 's/^\(GRUB_CMDLINE_LINUX_DEFAULT="\)\(.*\)"$/\1\2 video=hyperv_fb:800x600"/g' $ROOT/etc/default/grub
+        sed -i 's/^\(GRUB_CMDLINE_LINUX_DEFAULT="\)\(.*\)"$/\1\2 video=hyperv_fb:1300x600"/g' $ROOT/etc/default/grub
         ;;
     Virtual-Box )
         # load mod: vboxguest vboxsf vboxvideo
@@ -161,22 +161,23 @@ if ! {
     chown mewiteor:users /home/mewiteor/zshrc &&
     mkdir -p /home/mewiteor/.config/i3 &&
     mkdir -p /home/mewiteor/.config/conky &&
+    mkdir -p /home/mewiteor/.config/lxterminal &&
     mkdir -p /home/mewiteor/bin &&
     mkdir -p /home/mewiteor/Photos &&
     mkdir -p /home/mewiteor/.local/share/fonts &&
     mv /root/tmp/x/xinitrc /home/mewiteor/.xinitrc &&
     mv /root/tmp/x/config /home/mewiteor/.config/i3/config &&
     mv /root/tmp/x/conky.conf /home/mewiteor/.config/conky/conky.conf &&
+    mv /root/tmp/x/lxterminal.conf /home/mewiteor/.config/lxterminal/lxterminal.conf &&
     mv /root/tmp/x/conky-i3bar /home/mewiteor/bin/conky-i3bar &&
     mv /root/tmp/x/738.png /home/mewiteor/Photos/738.png &&
     mv /root/tmp/fonts/* /home/mewiteor/.local/share/fonts/ &&
     mv /root/tmp/gitconfig /home/mewiteor/.gitconfig &&
     chown mewiteor:users /home/mewiteor/.xinitrc &&
-    chown mewiteor:users /home/mewiteor/.config/i3/config &&
-    chown mewiteor:users /home/mewiteor/.config/conky/conky.conf &&
-    chown mewiteor:users /home/mewiteor/bin/conky-i3bar &&
-    chown mewiteor:users /home/mewiteor/Photos/738.png &&
-    chown mewiteor:users /home/mewiteor/.local/share/fonts/* &&
+    chown -R mewiteor:users /home/mewiteor/.config &&
+    chown -R mewiteor:users /home/mewiteor/bin &&
+    chown -R mewiteor:users /home/mewiteor/Photos &&
+    chown -R mewiteor:users /home/mewiteor/.local &&
     chown mewiteor:users /home/mewiteor/.gitconfig &&
     chmod u+x /home/mewiteor/bin/conky-i3bar &&
     yes q | passwd mewiteor &&
