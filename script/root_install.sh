@@ -162,12 +162,14 @@ if ! {
     mv /root/tmp/x/conky-i3bar /home/mewiteor/bin/conky-i3bar &&
     mv /root/tmp/x/738.png /home/mewiteor/Photos/738.png &&
     mv /root/tmp/fonts/* /home/mewiteor/.local/share/fonts/ &&
+    mv /root/tmp/gitconfig /home/mewiteor/.gitconfig &&
     chown mewiteor:users /home/mewiteor/.xinitrc &&
     chown mewiteor:users /home/mewiteor/.config/i3/config &&
     chown mewiteor:users /home/mewiteor/.config/conky/conky.conf &&
     chown mewiteor:users /home/mewiteor/bin/conky-i3bar &&
     chown mewiteor:users /home/mewiteor/Photos/738.png &&
     chown mewiteor:users /home/mewiteor/.local/share/fonts/* &&
+    chown mewiteor:users /home/mewiteor/.gitconfig &&
     chmod u+x /home/mewiteor/bin/conky-i3bar &&
     yes q | passwd mewiteor &&
     su mewiteor -c /home/mewiteor/mew.sh &&
