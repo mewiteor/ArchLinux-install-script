@@ -174,6 +174,7 @@ if ! {
     mv /root/tmp/x/xinitrc /home/mewiteor/.xinitrc &&
     mv /root/tmp/x/config /home/mewiteor/.config/i3/config &&
     mv /root/tmp/x/conky.conf /home/mewiteor/.config/conky/conky.conf &&
+    mv /root/tmp/x/conky.lua /home/mewiteor/.config/conky/conky.lua &&
     mv /root/tmp/x/lxterminal.conf /home/mewiteor/.config/lxterminal/lxterminal.conf &&
     mv /root/tmp/x/conky-i3bar /home/mewiteor/bin/conky-i3bar &&
     mv /root/tmp/x/738.png /home/mewiteor/Photos/738.png &&
