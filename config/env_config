@@ -14,6 +14,8 @@ PARTITION_MODE=${PARTITION_MODE:-""}
 virtual_machines=(None Hyper-V Virtual-Box VMWare)
 VIRTUAL_MACHINE=${VIRTUAL_MACHINE:-""}
 
+VIRTUAL_MACHINE_RESOLUTION_RATIO="1300x600"
+
 FS=/mnt/f
 ROOT=/mnt/r
 

@@ -52,14 +52,6 @@ fi
 echo_finish "passwd"
 
 echo_start "grub-install and grub-mkconfig"
-case $VIRTUAL_MACHINE in
-    Hyper-V )
-        sed -i 's/^\(GRUB_CMDLINE_LINUX_DEFAULT="\)\(.*\)"$/\1\2 video=hyperv_fb:1300x600"/g' $ROOT/etc/default/grub
-        ;;
-    Virtual-Box )
-        # load mod: vboxguest vboxsf vboxvideo
-        ;;
-esac
 GRUB_INSTALL_COMMAND=":"
 case $PARTITION_MODE in
     USB_MBR)
@@ -67,7 +59,7 @@ case $PARTITION_MODE in
     USB_GPT)
         ;;
     MBR | BtrFS)
-        GRUB_INSTALL_COMMAND="grub-install --target=i386-pc --recheck $SD"
+        GRUB_INSTALL_COMMAND="grub-install --target=i386-pc $SD"
         ;;
     GPT)
         GRUB_INSTALL_COMMAND="grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub"
@@ -77,11 +69,23 @@ case $PARTITION_MODE in
         exit 1
         ;;
 esac
-if ! {
-    $($GRUB_INSTALL_COMMAND) &&
-    grub-mkconfig -o /boot/grub/grub.cfg
-}; then
-    echo_err "grub-install or grub-mkconfig"
+if ! $($GRUB_INSTALL_COMMAND); then
+    echo_err "grub-install"
+    exit 1
+fi
+case $VIRTUAL_MACHINE in
+    Hyper-V )
+        if ! sed -i 's/^\(GRUB_CMDLINE_LINUX_DEFAULT="\)\(.*\)"$/\1\2 video=hyperv_fb:'$VIRTUAL_MACHINE_RESOLUTION_RATIO'"/g' /etc/default/grub; then
+            echo_err "grub config for $VIRTUAL_MACHINE"
+            exit 1
+        fi
+        ;;
+    Virtual-Box )
+        # load mod: vboxguest vboxsf vboxvideo
+        ;;
+esac
+if ! grub-mkconfig -o /boot/grub/grub.cfg; then
+    echo_err "grub-mkconfig"
     exit 1
 fi
 echo_finish "grub-install and grub-mkconfig"
@@ -128,6 +132,8 @@ if ! {
     vim -u /root/tmp/vrc "+BundleInstall" "+q" "+q"
 }; then
     echo_err "Vundle"
+    echo "git clone https://github.com/VundleVim/Vundle.vim.git /usr/share/vim/vimfiles/bundle/Vundle.vim &&" > /root/todo
+    echo 'vim -u /root/tmp/vrc "+BundleInstall" "+q" "+q"' >> /root/todo
 else
     echo_finish "Vundle"
 fi
