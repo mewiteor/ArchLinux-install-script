@@ -91,7 +91,7 @@ fi
 echo_finish "grub-install and grub-mkconfig"
 
 echo_start "pacman"
-INSTALL_PACKAGES=(zsh sudo vim git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget w3m ctags xorg-server xorg-xinit lxde i3-wm i3lock i3status feh conky yaourt)
+INSTALL_PACKAGES=(zsh sudo vim git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget w3m ctags xorg-server xorg-xinit lxde i3-wm i3lock i3status feh conky yaourt fcitx fcitx-table-extra fcitx-configtool vimpager google-chrome dmenu)
 case $VIRTUAL_MACHINE in
     Hyper-V )
         INSTALL_PACKAGES+=(xf86-video-fbdev)
