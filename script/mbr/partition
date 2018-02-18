@@ -1,0 +1,95 @@
+echo_start "clean ${SD}"
+if ! dd if=/dev/zero of=$SD bs=512 count=1; then
+    echo_err "clean ${SD}"
+    exit 1
+fi
+echo_finish "clean ${SD}"
+
+echo_start "parted ${SD}"
+if ! {
+    parted -s $SD mklabel msdos &&
+    parted -s $SD mkpart primary fat32 1MiB 201MiB &&
+    parted -s $SD mkpart primary linux-swap 201MiB 1225MiB &&
+    parted -s $SD -- mkpart primary btrfs 1225MiB -0 &&
+    parted -s $SD set 1 boot on
+}; then
+    echo_err "parted"
+    exit 1
+fi
+echo_finish "parted ${SD}"
+
+echo_start "mkfs $SD"
+if ! {
+    mkfs.vfat -F32 -n "boot" ${SD}1 &&
+    mkfs.btrfs -f -L "Arch Linux" ${SD}3
+}; then
+    echo_err "mkfs $SD"
+    exit 1
+fi
+echo_finish "mkfs $SD"
+
+echo_start "make files $SD"
+if ! {
+    mkdir -p $FS &&
+    mkdir -p $ROOT &&
+    mount ${SD}3 $FS -o noatime,autodefrag,compress-force=lzo,space_cache
+}; then
+    echo_err "mount ${SD}3"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $FS/snapshot
+    mkdir -p $FS/active
+    btrfs subvolume create $FS/active/ROOT
+    btrfs subvolume create $FS/active/home
+    btrfs subvolume create $FS/active/opt
+    btrfs subvolume create $FS/active/var
+}; then
+    echo_err "btrfs subvolume create"
+    exit 1
+fi
+
+if ! mount ${SD}3 $ROOT -o noatime,autodefrag,compress-force=lzo,space_cache,subvol=active/ROOT; then
+    echo_err "mount ROOT"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $ROOT/home &&
+    mkdir -p $ROOT/opt &&
+    mkdir -p $ROOT/var/lib &&
+    mount ${SD}3 $ROOT/home -o noatime,autodefrag,compress-force=lzo,space_cache,subvol=active/home &&
+    mount ${SD}3 $ROOT/opt -o noatime,autodefrag,compress-force=lzo,space_cache,subvol=active/opt &&
+    mount ${SD}3 $ROOT/var -o noatime,autodefrag,compress-force=lzo,space_cache,subvol=active/var
+}; then
+    echo_err "mount"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $ROOT/var/lib &&
+    mount --bind $FS/active/ROOT/var/lib $ROOT/var/lib
+}; then
+    echo_err "mount bind"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $ROOT/run/f &&
+    mkdir -p $ROOT/boot &&
+    mount ${SD}1 $ROOT/boot
+}; then
+    echo_err "mount ${SD}1"
+    exit 1
+fi
+
+if ! {
+    mkswap -L swap ${SD}2 &&
+    swapon ${SD}2
+}; then
+    echo_err "swapon"
+    exit 1
+fi
+
+# vim: ft=sh

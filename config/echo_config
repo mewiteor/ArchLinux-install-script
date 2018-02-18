@@ -1,0 +1,32 @@
+# for echo
+INFO="\e[32m"
+ERR="\e[31m"
+ED="\e[0m"
+
+function echo_info
+{
+    echo -e "${INFO}${*}${ED}"
+}
+
+function echo_err
+{
+    echo -e "${ERR}${*} error!${ED}" 1>&2
+}
+
+function echo_start
+{
+    echo -e "${INFO}${*} start${ED}"
+}
+
+function echo_finish
+{
+    echo -e "${INFO}${*} finish${ED}\n"
+}
+
+SCRIPT_DIR=$(dirname $0)
+RESOURCE_DIR=$SCRIPT_DIR/../resource
+CONFIG_DIR=$SCRIPT_DIR/../config
+
+return 0
+
+# vim: ft=sh

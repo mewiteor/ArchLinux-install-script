@@ -1,0 +1,68 @@
+# init
+[ -n "$CONFIG_FLAG" ] && return 0
+
+######################################################
+
+# config variable
+
+# device name, eg. /dev/sdX
+SD=${SD:-""}
+
+# partition mode: USB_MBR USB_GPT MBR GPT BtrFS
+PARTITION_MODE=${PARTITION_MODE:-""}
+
+FS=/mnt/f
+ROOT=/mnt/r
+
+#######################################################
+
+until [ -w "$SD" ]
+do
+    echo -n "SD:"
+    read SD
+done
+
+if [ -z "$PARTITION_MODE" ]
+then
+    echo_info "PARTITION_MODE:"
+    select PARTITION_MODE in USB_MBR USB_GPT MBR GPT BtrFS
+    do
+        if [ -n "$PARTITION_MODE" ]
+        then
+            break
+        fi
+    done
+fi
+
+SUBDIR=""
+
+case $PARTITION_MODE in
+    USB_MBR)
+        SUBDIR="usb_mbr"
+        ;;
+    USB_GPT)
+        SUBDIR="usb_gpt"
+        ;;
+    MBR)
+        SUBDIR="mbr"
+        ;;
+    GPT)
+        SUBDIR="gpt"
+        ;;
+    BtrFS)
+        SUBDIR="btrfs"
+        ;;
+    *)
+        echo_err "unknown partition mode"
+        return 1
+        ;;
+esac
+
+echo_info "device: $SD"
+echo_info "partition mode: $PARTITION_MODE"
+
+CONFIG_FLAG="flag"
+
+return 0
+
+# vim: ft=sh

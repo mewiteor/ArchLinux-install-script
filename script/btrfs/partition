@@ -1,0 +1,71 @@
+echo_start "clean ${SD}"
+if ! dd if=/dev/zero of=$SD bs=512 count=1; then
+    echo_err "clean ${SD}"
+    exit 1
+fi
+echo_finish "clean ${SD}"
+
+echo_start "mkfs $SD"
+if ! mkfs.btrfs -f $SD; then
+    echo_err "mkfs $SD"
+    exit 1
+fi
+echo_finish "mkfs $SD"
+
+echo_start "make files $SD"
+if ! {
+    mkdir -p $FS &&
+    mkdir -p $ROOT &&
+    mount ${SD} $FS -o noatime,autodefrag,compress-force=lzo,space_cache
+}; then
+    echo_err "mount ${SD}"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $FS/snapshot
+    mkdir -p $FS/active
+    btrfs subvolume create $FS/active/ROOT
+    btrfs subvolume create $FS/active/home
+    btrfs subvolume create $FS/active/opt
+    btrfs subvolume create $FS/active/var
+}; then
+    echo_err "btrfs subvolume create"
+    exit 1
+fi
+
+if ! mount ${SD} $ROOT -o noatime,autodefrag,compress-force=lzo,space_cache,subvol=active/ROOT; then
+    echo_err "mount ROOT"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $ROOT/home &&
+    mkdir -p $ROOT/opt &&
+    mkdir -p $ROOT/var/lib &&
+    mount ${SD} $ROOT/home -o noatime,autodefrag,compress-force=lzo,space_cache,subvol=active/home &&
+    mount ${SD} $ROOT/opt -o noatime,autodefrag,compress-force=lzo,space_cache,subvol=active/opt &&
+    mount ${SD} $ROOT/var -o noatime,autodefrag,compress-force=lzo,space_cache,subvol=active/var
+}; then
+    echo_err "mount"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $ROOT/var/lib &&
+    mount --bind $FS/active/ROOT/var/lib $ROOT/var/lib
+}; then
+    echo_err "mount bind"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $ROOT/run/f &&
+    mkdir -p $ROOT/boot
+}; then
+    echo_err "mkdir boot"
+    exit 1
+fi
+echo_finish "make files $SD"
+
+# vim: ft=sh

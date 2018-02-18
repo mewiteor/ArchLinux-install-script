@@ -1,0 +1,23 @@
+if [ -e $ROOT ]; then
+    umount -R $ROOT
+    if ! rmdir $ROOT; then
+        echo_err "rmdir $ROOT"
+        exit 1
+    fi
+fi
+
+if [ -e $FS ]; then
+    umount -R $FS
+    if ! rmdir $FS; then
+        echo_err "rmdir $FS"
+        exit 1
+    fi
+fi
+
+if [ $(cat /proc/swaps | grep ${SD} | wc -l) -gt 0 ]; then
+    cat /proc/swaps | grep ${SD} | cut -f1 -d' ' | xargs swapoff
+fi
+
+exit 0
+
+# vim: ft=sh

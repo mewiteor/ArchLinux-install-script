@@ -1,0 +1,41 @@
+echo_start "make files $SD"
+if ! {
+    mkdir -p $FS &&
+    mkdir -p $ROOT &&
+    mount ${SD}3 $FS -o noatime,autodefrag,compress-force=lzo,space_cache
+}; then
+    echo_err "mount ${SD}3"
+    exit 1
+fi
+
+if ! mount ${SD}3 $ROOT -o noatime,autodefrag,compress-force=lzo,space_cache,subvol=active/ROOT; then
+    echo_err "mount ROOT"
+    exit 1
+fi
+
+if ! {
+    mount ${SD}3 $ROOT/home -o noatime,autodefrag,compress-force=lzo,space_cache,subvol=active/home &&
+    mount ${SD}3 $ROOT/opt -o noatime,autodefrag,compress-force=lzo,space_cache,subvol=active/opt &&
+    mount ${SD}3 $ROOT/var -o noatime,autodefrag,compress-force=lzo,space_cache,subvol=active/var
+}; then
+    echo_err "mount"
+    exit 1
+fi
+
+if ! mount --bind $FS/active/ROOT/var/lib $ROOT/var/lib; then
+    echo_err "mount bind"
+    exit 1
+fi
+
+if ! mount ${SD}1 $ROOT/boot; then
+    echo_err "mount ${SD}1"
+    exit 1
+fi
+
+if ! swapon ${SD}2; then
+    echo_err "swapon"
+    exit 1
+fi
+echo_finish "make files $SD"
+
+# vim: ft=sh
