@@ -5,8 +5,9 @@ Arch Linux 的安装脚本
 
 | 文件名 | 说明 |
 | -------|------|
-| install.sh | 安装脚本 |
-| mount.sh | 挂载分区的脚本 |
-| umount.sh | 卸载分区的脚本 |
-| start.sh | 启动sshd服务的脚本(root的密码为 **q**) |
+| script/install.sh | 安装脚本 |
+| script/mount.sh | 挂载分区的脚本 |
+| script/umount.sh | 卸载分区的脚本 |
+| script/start.sh | 启动sshd服务的脚本(root的密码为 **q**) |
 
+把需要安装的字体打包为fonts.tar.xz放在项目的根目录
