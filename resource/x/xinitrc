@@ -3,4 +3,8 @@
 # xrandr --addmode VGA-0 1360x768_60.00
 # xrandr --output VGA-0 --mode 1360x768_60.00
 # xrdb -merge ~/.Xresources
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
+exec fcitx&
 exec i3
