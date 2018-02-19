@@ -38,4 +38,6 @@ if ! swapon ${SD}2; then
 fi
 echo_finish "make files $SD"
 
+exit 0
+
 # vim: ft=sh

@@ -36,7 +36,12 @@ fi
 echo_finish "rankmirrors"
 
 echo_start "pacstrap"
-INSTALL_PACKAGES=(base base-devel btrfs-progs grub)
+INSTALL_PACKAGES=(base base-devel grub)
+case $PARTITION_MODE in
+    MBR | GPT | BTRFS )
+        INSTALL_PACKAGES+=(btrfs-progs)
+        ;;
+esac
 case $PARTITION_MODE in
     USB_GPT | GPT)
         INSTALL_PACKAGES+=(efibootmgr)

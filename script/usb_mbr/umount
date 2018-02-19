@@ -1,2 +1,11 @@
+if [ -e $ROOT ]; then
+    umount -R $ROOT
+    if ! rmdir $ROOT; then
+        echo_err "rmdir $ROOT"
+        exit 1
+    fi
+fi
+
+exit 0
 
 # vim: ft=sh

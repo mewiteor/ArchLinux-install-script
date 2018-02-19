@@ -28,4 +28,6 @@ if ! mount --bind $FS/active/ROOT/var/lib $ROOT/var/lib; then
 fi
 echo_finish "make files $SD"
 
+exit 0
+
 # vim: ft=sh

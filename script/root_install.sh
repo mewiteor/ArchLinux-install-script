@@ -38,6 +38,14 @@ fi
 echo_finish "set localtime"
 
 echo_start "create ramdisk"
+case $PARTITION_MODE in
+    USB_MBR | USB_GPT )
+        if ! sed -i 's/^HOOKS=(\(.*\)udev \(.*\) block\(.*\))$/HOOKS=(\1udev block \2\3)/g' /etc/mkinitcpio.conf; then
+            echo_err "change /etc/mkinitcpio.conf"
+            exit 1
+        fi
+        ;;
+esac
 if ! mkinitcpio -p linux; then
     echo_err "mkinitcpio"
     exit 1
@@ -91,7 +99,11 @@ fi
 echo_finish "grub-install and grub-mkconfig"
 
 echo_start "pacman"
-INSTALL_PACKAGES=(zsh sudo vim git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget w3m ctags xorg-server xorg-xinit lxde i3-wm i3lock i3status feh conky yaourt fcitx fcitx-table-extra fcitx-configtool vimpager google-chrome dmenu)
+INSTALL_PACKAGES=(zsh sudo vim vimpager git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget ctags yaourt)
+
+#for X
+INSTALL_PACKAGES+=(xorg-server xorg-xinit lxde i3-wm i3lock i3status feh conky fcitx fcitx-table-extra fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 google-chrome dmenu)
+
 case $VIRTUAL_MACHINE in
     Hyper-V )
         INSTALL_PACKAGES+=(xf86-video-fbdev)

@@ -84,5 +84,6 @@ if ! {
     echo_err "swapon"
     exit 1
 fi
+echo_finish "make files $SD"
 
 # vim: ft=sh

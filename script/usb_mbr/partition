@@ -1,0 +1,41 @@
+echo_start "parted ${SD}"
+if ! {
+    parted -s $SD mklabel msdos &&
+    parted -s $SD -- mkpart primary fat32 1MiB -3072MiB &&
+    parted -s $SD -- mkpart primary ext4 -3072MiB -0 &&
+    parted -s $SD set 2 boot on
+}; then
+    echo_err "parted"
+    exit 1
+fi
+echo_finish "parted ${SD}"
+
+echo_start "mkfs $SD"
+if ! {
+    mkfs.vfat -F32 -n "Data" ${SD}1 &&
+    mkfs.ext4 -f -L "Arch Linux" -O "^has_journal" ${SD}2
+}; then
+    echo_err "mkfs $SD"
+    exit 1
+fi
+echo_finish "mkfs $SD"
+
+echo_start "make files $SD"
+if ! {
+    mkdir -p $ROOT &&
+    mount ${SD}2 $ROOT
+}; then
+    echo_err "mount ${SD}2"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $ROOT/data &&
+    mount ${SD}1 $ROOT/data
+}; then
+    echo_err "mount ${SD}1"
+    exit 1
+fi
+echo_finish "make files $SD"
+
+# vim: ft=sh
