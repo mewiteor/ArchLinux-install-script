@@ -1,8 +1,8 @@
 echo_start "parted ${SD}"
 if ! {
     parted -s $SD mklabel msdos &&
-    parted -s $SD -- mkpart primary fat32 1MiB -3072MiB &&
-    parted -s $SD -- mkpart primary ext4 -3072MiB -0 &&
+    parted -s $SD -- mkpart primary fat32 1MiB -4096MiB &&
+    parted -s $SD -- mkpart primary ext4 -4096MiB -0 &&
     parted -s $SD set 2 boot on
 }; then
     echo_err "parted"
@@ -13,7 +13,7 @@ echo_finish "parted ${SD}"
 echo_start "mkfs $SD"
 if ! {
     mkfs.vfat -F32 -n "Data" ${SD}1 &&
-    mkfs.ext4 -f -L "Arch Linux" -O "^has_journal" ${SD}2
+    mkfs.ext4 -F -L "Arch Linux" -O "^has_journal" ${SD}2
 }; then
     echo_err "mkfs $SD"
     exit 1

@@ -125,13 +125,7 @@ Bundle 'vim-airline/vim-airline'
 Bundle 'vim-airline/vim-airline-themes'
 Bundle 'tomasr/molokai'
 
-Bundle 'cmd.vim' 
-
-" vim-scripts repos
-
-" need:
-"   ctags(http://sourceforge.net/projects/ctags/files/latest/download?source=directory)
-Bundle 'taglist.vim'
-
-Bundle 'winmanager'
+Bundle 'majutsushi/tagbar'
+Bundle 'scrooloose/nerdtree'
+Bundle 'Licenses'
 filetype plugin indent on     " required! 

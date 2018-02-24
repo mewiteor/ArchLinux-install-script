@@ -62,15 +62,11 @@ echo_finish "passwd"
 echo_start "grub-install and grub-mkconfig"
 GRUB_INSTALL_COMMAND=":"
 case $PARTITION_MODE in
-    USB_MBR)
+    USB_MBR | MBR | BtrFS)
+        GRUB_INSTALL_COMMAND="grub-install --target=i386-pc --recheck $SD"
         ;;
-    USB_GPT)
-        ;;
-    MBR | BtrFS)
-        GRUB_INSTALL_COMMAND="grub-install --target=i386-pc $SD"
-        ;;
-    GPT)
-        GRUB_INSTALL_COMMAND="grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub"
+    USB_GPT | GPT)
+        GRUB_INSTALL_COMMAND="grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub --removable --recheck"
         ;;
     *)
         echo_err "unknown partition mode"
@@ -102,7 +98,7 @@ echo_start "pacman"
 INSTALL_PACKAGES=(zsh sudo vim vimpager git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget ctags yaourt)
 
 #for X
-INSTALL_PACKAGES+=(xorg-server xorg-xinit lxde i3-wm i3lock i3status feh conky fcitx fcitx-table-extra fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 google-chrome dmenu)
+INSTALL_PACKAGES+=(xorg-server xorg-xinit rxvt-unicode i3-gaps i3lock i3status feh conky fcitx fcitx-table-extra fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 google-chrome dmenu otf-font-awesome compton)
 
 case $VIRTUAL_MACHINE in
     Hyper-V )
@@ -141,7 +137,9 @@ echo_finish "set sudo"
 echo_start "Vundle"
 if ! {
     git clone https://github.com/VundleVim/Vundle.vim.git /usr/share/vim/vimfiles/bundle/Vundle.vim &&
-    vim -u /root/tmp/vrc "+BundleInstall" "+q" "+q"
+    vim -u /root/tmp/vrc "+BundleInstall" "+q" "+q" &&
+    echo "hi Normal ctermbg=none" >> /usr/share/vim/vimfiles/bundle/molokai/colors/molokai.vim
+    echo "hi LineNr ctermbg=none" >> /usr/share/vim/vimfiles/bundle/molokai/colors/molokai.vim
 }; then
     echo_err "Vundle"
     echo "git clone https://github.com/VundleVim/Vundle.vim.git /usr/share/vim/vimfiles/bundle/Vundle.vim &&" > /root/todo
@@ -179,30 +177,30 @@ if ! {
     chown mewiteor:users /home/mewiteor/zshrc &&
     mkdir -p /home/mewiteor/.config/i3 &&
     mkdir -p /home/mewiteor/.config/conky &&
-    mkdir -p /home/mewiteor/.config/lxterminal &&
-    mkdir -p /home/mewiteor/bin &&
-    mkdir -p /home/mewiteor/Photos &&
     mkdir -p /home/mewiteor/.local/share/fonts &&
     mv /root/tmp/x/xinitrc /home/mewiteor/.xinitrc &&
     mv /root/tmp/x/config /home/mewiteor/.config/i3/config &&
-    mv /root/tmp/x/conky.conf /home/mewiteor/.config/conky/conky.conf &&
-    mv /root/tmp/x/conky.lua /home/mewiteor/.config/conky/conky.lua &&
-    mv /root/tmp/x/lxterminal.conf /home/mewiteor/.config/lxterminal/lxterminal.conf &&
-    mv /root/tmp/x/conky-i3bar /home/mewiteor/bin/conky-i3bar &&
-    mv /root/tmp/x/738.png /home/mewiteor/Photos/738.png &&
+    mv /root/tmp/x/conky-down.conf /home/mewiteor/.config/conky/conky-down.conf &&
+    mv /root/tmp/x/conky-up.conf /home/mewiteor/.config/conky/conky-up.conf &&
+    mv /root/tmp/x/conky-down.lua /home/mewiteor/.config/conky/conky-down.lua &&
+    mv /root/tmp/x/conky-up.lua /home/mewiteor/.config/conky/conky-up.lua &&
+    mv /root/tmp/x/Xresources /home/mewiteor/.Xresources &&
+    mv /root/tmp/x/launch.sh /home/mewiteor/.config/i3/launch.sh &&
+    mv /root/tmp/x/bg.png /home/mewiteor/.config/i3/bg.png &&
     mv /root/tmp/fonts/* /home/mewiteor/.local/share/fonts/ &&
     mv /root/tmp/gitconfig /home/mewiteor/.gitconfig &&
+    mv /root/tmp/x/fcitx.tar.xz /home/mewiteor/fcitx.tar.xz &&
     chown mewiteor:users /home/mewiteor/.xinitrc &&
     chown -R mewiteor:users /home/mewiteor/.config &&
-    chown -R mewiteor:users /home/mewiteor/bin &&
-    chown -R mewiteor:users /home/mewiteor/Photos &&
+    chown -R mewiteor:users /home/mewiteor/.Xresources &&
     chown -R mewiteor:users /home/mewiteor/.local &&
     chown mewiteor:users /home/mewiteor/.gitconfig &&
-    chmod u+x /home/mewiteor/bin/conky-i3bar &&
+    chmod u+x /home/mewiteor/.config/i3/launch.sh &&
     yes q | passwd mewiteor &&
     su mewiteor -c /home/mewiteor/mew.sh &&
     rm /home/mewiteor/mew.sh &&
-    rm /home/mewiteor/echo_config
+    rm /home/mewiteor/echo_config &&
+    rm /home/mewiteor/fcitx.tar.xz
 }; then
     echo_err "su"
     exit 1

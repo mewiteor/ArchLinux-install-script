@@ -44,4 +44,11 @@ else
     echo_finish "get zsh-syntax-highlighting"
 fi
 
+echo_start "config fcitx"
+if ! tar -C $HOME/.config -xpf $HOME/fcitx.tar.xz; then
+    echo_err "config fcitx"
+    exit 1
+fi
+echo_finish "config fcitx"
+
 exit 0

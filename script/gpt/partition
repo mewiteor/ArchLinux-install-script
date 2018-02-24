@@ -1,7 +1,7 @@
 echo_start "parted ${SD}"
 if ! {
     parted -s $SD mklabel gpt &&
-    parted -s $SD mkpart primary 1MiB 513MiB &&
+    parted -s $SD mkpart primary fat32 1MiB 513MiB &&
     parted -s $SD mkpart primary linux-swap 513MiB 1537MiB &&
     parted -s $SD -- mkpart primary btrfs 1537MiB -0 &&
     parted -s $SD set 1 boot on

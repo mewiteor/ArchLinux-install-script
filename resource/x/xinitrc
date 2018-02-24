@@ -2,9 +2,11 @@
 # cvt 1360 768|grep "^[^#]"|sed -e 's/Modeline //g'|xargs xrandr --newmode
 # xrandr --addmode VGA-0 1360x768_60.00
 # xrandr --output VGA-0 --mode 1360x768_60.00
-# xrdb -merge ~/.Xresources
 export GTK_IM_MODULE=fcitx
 export QT_IM_MODULE=fcitx
 export XMODIFIERS=@im=fcitx
+export LANG="zh_CN.UTF-8"
+xrdb -merge ~/.Xresources
+exec compton -CGb &
 exec fcitx&
 exec i3
