@@ -95,7 +95,7 @@ fi
 echo_finish "grub-install and grub-mkconfig"
 
 echo_start "pacman"
-INSTALL_PACKAGES=(zsh sudo vim vimpager git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget ctags yaourt)
+INSTALL_PACKAGES=(zsh sudo vim vimpager git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget ctags yaourt rsync)
 
 #for X
 INSTALL_PACKAGES+=(xorg-server xorg-xinit rxvt-unicode i3-gaps i3lock i3status feh conky fcitx fcitx-table-extra fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 google-chrome dmenu otf-font-awesome compton)
@@ -120,7 +120,7 @@ if ! {
     echo_err "pacman"
     exit 1
 fi
-mv /root/tmp/vimrc /etc/vimrc
+# mv /root/tmp/vimrc /etc/vimrc
 echo_finish "pacman"
 
 echo_start "useradd"
@@ -133,20 +133,6 @@ echo_finish "useradd"
 echo_start "set sudo"
 echo "mewiteor ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 echo_finish "set sudo"
-
-echo_start "Vundle"
-if ! {
-    git clone https://github.com/VundleVim/Vundle.vim.git /usr/share/vim/vimfiles/bundle/Vundle.vim &&
-    vim -u /root/tmp/vrc "+BundleInstall" "+q" "+q" &&
-    echo "hi Normal ctermbg=none" >> /usr/share/vim/vimfiles/bundle/molokai/colors/molokai.vim
-    echo "hi LineNr ctermbg=none" >> /usr/share/vim/vimfiles/bundle/molokai/colors/molokai.vim
-}; then
-    echo_err "Vundle"
-    echo "git clone https://github.com/VundleVim/Vundle.vim.git /usr/share/vim/vimfiles/bundle/Vundle.vim &&" > /root/todo
-    echo 'vim -u /root/tmp/vrc "+BundleInstall" "+q" "+q"' >> /root/todo
-else
-    echo_finish "Vundle"
-fi
 
 echo_start "systemctl"
 services=(NetworkManager sshd)
@@ -168,39 +154,27 @@ echo_finish "systemctl"
 
 echo_start "su"
 if ! {
-    cp /root/tmp/echo_config /home/mewiteor/echo_config &&
-    chown mewiteor:users /home/mewiteor/echo_config &&
-    mv /root/tmp/mew_install.sh /home/mewiteor/mew.sh &&
+    rsync -avP /root/tmp/echo_config /home/mewiteor/echo_config &&
+    rsync -avP /root/tmp/mew_install.sh /home/mewiteor/mew.sh &&
     chown mewiteor:users /home/mewiteor/mew.sh &&
     chmod u+x /home/mewiteor/mew.sh &&
-    mv /root/tmp/zshrc /home/mewiteor/zshrc &&
-    chown mewiteor:users /home/mewiteor/zshrc &&
-    mkdir -p /home/mewiteor/.config/i3 &&
-    mkdir -p /home/mewiteor/.config/conky &&
-    mkdir -p /home/mewiteor/.local/share/fonts &&
-    mv /root/tmp/x/xinitrc /home/mewiteor/.xinitrc &&
-    mv /root/tmp/x/config /home/mewiteor/.config/i3/config &&
-    mv /root/tmp/x/conky-down.conf /home/mewiteor/.config/conky/conky-down.conf &&
-    mv /root/tmp/x/conky-up.conf /home/mewiteor/.config/conky/conky-up.conf &&
-    mv /root/tmp/x/conky-down.lua /home/mewiteor/.config/conky/conky-down.lua &&
-    mv /root/tmp/x/conky-up.lua /home/mewiteor/.config/conky/conky-up.lua &&
-    mv /root/tmp/x/Xresources /home/mewiteor/.Xresources &&
-    mv /root/tmp/x/launch.sh /home/mewiteor/.config/i3/launch.sh &&
-    mv /root/tmp/x/bg.png /home/mewiteor/.config/i3/bg.png &&
-    mv /root/tmp/fonts/* /home/mewiteor/.local/share/fonts/ &&
-    mv /root/tmp/gitconfig /home/mewiteor/.gitconfig &&
-    mv /root/tmp/x/fcitx.tar.xz /home/mewiteor/fcitx.tar.xz &&
-    chown mewiteor:users /home/mewiteor/.xinitrc &&
-    chown -R mewiteor:users /home/mewiteor/.config &&
-    chown -R mewiteor:users /home/mewiteor/.Xresources &&
-    chown -R mewiteor:users /home/mewiteor/.local &&
-    chown mewiteor:users /home/mewiteor/.gitconfig &&
-    chmod u+x /home/mewiteor/.config/i3/launch.sh &&
+    rsync -avP --exclude "*.un~" /root/tmp/system/. / &&
+    rsync -avP --exclude "*.un~"  /root/tmp/user/. /home/mewiteor &&
+    mkdir -p /home/mewiteor/.local/share &&
+    rsync -avP --exclude "*.un~"  /root/tmp/fonts /home/mewiteor/.local/share &&
+    for file in $(find /home/mewiteor -iname "*.m4"); do
+        if ! m4 -DVIRTUAL_MACHINE=$VIRTUAL_MACHINE $file > ${file%.*}; then
+            echo_err "m4 $file"
+            exit 1
+        else
+            rm -f $file
+        fi
+    done &&
+    chown -R mewiteor:users /home/mewiteor &&
     yes q | passwd mewiteor &&
     su mewiteor -c /home/mewiteor/mew.sh &&
     rm /home/mewiteor/mew.sh &&
-    rm /home/mewiteor/echo_config &&
-    rm /home/mewiteor/fcitx.tar.xz
+    rm /home/mewiteor/echo_config
 }; then
     echo_err "su"
     exit 1
