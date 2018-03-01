@@ -54,10 +54,10 @@ nmap <F9> :IndentGuidesToggle<cr>
 " need:
 "   ctags(http://sourceforge.net/projects/ctags/files/latest/download?source=directory)
 " 'majutsushi/tagbar'
-nmap <F7> :TagbarToggle<cr>
+nmap <F8> :TagbarToggle<cr>
 
 " 'scrooloose/nerdtree'
-nmap <F8> :NERDTreeToggle<cr>
+nmap <F7> :NERDTreeToggle<cr>
 
 " 'antoyo/vim-licenses'
 let g:licenses_copyright_holders_name = 'Mewiteor <mewiteor@hotmail.com>'

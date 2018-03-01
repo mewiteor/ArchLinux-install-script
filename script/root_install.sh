@@ -120,7 +120,7 @@ if ! {
     echo_err "pacman"
     exit 1
 fi
-# mv /root/tmp/vimrc /etc/vimrc
+echo "source $$VIM/vimrc" >> /etc/vimrc
 echo_finish "pacman"
 
 echo_start "useradd"
