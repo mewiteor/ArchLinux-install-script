@@ -28,7 +28,7 @@ set statusline=2
 
 " github
 " 'drmingdrmer/xptemplate'
-if has("Gui")
+if has("Gui") || has("unix")
     " 'bling/vim-airline'
     " 'vim-airline/vim-airline-themes'
 
@@ -63,6 +63,9 @@ nmap <F7> :NERDTreeToggle<cr>
 let g:licenses_copyright_holders_name = 'Mewiteor <mewiteor@hotmail.com>'
 let g:licenses_authors_name = 'Mewiteor <mewiteor@hotmail.com>'
 let g:licenses_default_commands = ['gpl']
+
+" You Complete Me
+let g:ycm_global_ycm_extra_conf=$VIM."/vimfiles/.ycm_extra_conf.py"
 
 if !exists("my_auto_commands_loaded")
     let my_auto_commands_loaded=1

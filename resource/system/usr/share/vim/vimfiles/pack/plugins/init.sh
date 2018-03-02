@@ -9,3 +9,4 @@ git submodule add https://github.com/nathanaelkane/vim-indent-guides.git start/v
 git submodule add https://github.com/majutsushi/tagbar.git start/tagbar
 git submodule add https://github.com/scrooloose/nerdtree.git start/nerdtree
 git submodule add https://github.com/antoyo/vim-licenses.git start/vim-licenses
+git submodule add https://github.com/Valloric/YouCompleteMe.git start/YouCompleteMe

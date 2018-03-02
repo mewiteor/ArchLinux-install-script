@@ -31,3 +31,6 @@
 [submodule "resource/system/usr/share/vim/vimfiles/pack/plugins/start/vim-licenses"]
 	path = resource/system/usr/share/vim/vimfiles/pack/plugins/start/vim-licenses
 	url = https://github.com/antoyo/vim-licenses.git
+[submodule "resource/system/usr/share/vim/vimfiles/pack/plugins/start/YouCompleteMe"]
+	path = resource/system/usr/share/vim/vimfiles/pack/plugins/start/YouCompleteMe
+	url = https://github.com/Valloric/YouCompleteMe.git

@@ -95,7 +95,7 @@ fi
 echo_finish "grub-install and grub-mkconfig"
 
 echo_start "pacman"
-INSTALL_PACKAGES=(zsh sudo vim vimpager git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget ctags yaourt rsync)
+INSTALL_PACKAGES=(zsh sudo vim vimpager git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget ctags yaourt rsync cmake clang python-pip)
 
 #for X
 INSTALL_PACKAGES+=(xorg-server xorg-xinit rxvt-unicode i3-gaps i3lock i3status feh conky fcitx fcitx-table-extra fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 google-chrome dmenu otf-font-awesome compton)
@@ -120,8 +120,15 @@ if ! {
     echo_err "pacman"
     exit 1
 fi
-echo "source $$VIM/vimrc" >> /etc/vimrc
+echo "source \$VIM/vimrc" >> /etc/vimrc
 echo_finish "pacman"
+
+echo_start "pip"
+if ! pip install future frozendict requests; then
+    echo_err "pip"
+    exit 1
+fi
+ecno_end "pip"
 
 echo_start "useradd"
 if ! useradd -m -g users -G wheel -s /bin/zsh mewiteor; then
