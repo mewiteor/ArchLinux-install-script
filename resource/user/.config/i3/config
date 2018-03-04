@@ -237,4 +237,5 @@ mode "$mode_gaps_outer" {
 }
 
 # auto start
-exec feh --bg-scale $HOME/.config/i3/bg.png
+exec feh --bg-scale --no-fehbg $HOME/.config/i3/bg.png
+exec ss-qt5

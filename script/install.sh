@@ -66,6 +66,9 @@ echo_start "rsync"
 if [ -f $SCRIPT_DIR/../fonts.tar.xz ]; then
     tar -C $RESOURCE_DIR -xpf $SCRIPT_DIR/../fonts.tar.xz > /dev/null 2>&1
 fi
+if [ -f $SCRIPT_DIR/../user.tar.xz ]; then
+    tar -C $RESOURCE_DIR -xpf $SCRIPT_DIR/../user.tar.xz > /dev/null 2>&1
+fi
 if ! {
     rsync -avP /etc/pacman.d/mirrorlist $ROOT/etc/pacman.d/mirrorlist &&
     rsync -avP /etc/pacman.d/archlinuxcn-mirrorlist $ROOT/etc/pacman.d/archlinuxcn-mirrorlist &&
