@@ -86,6 +86,10 @@ case $VIRTUAL_MACHINE in
         ;;
     Virtual-Box )
         # load mod: vboxguest vboxsf vboxvideo
+        if ! sed -i 's/^\(GRUB_PRELOAD_MODULES="\)\(.*\)"$/\1\2 vboxguest vboxsf vboxvideo"/g' /etc/default/grub; then
+            echo_err "grub config for $VIRTUAL_MACHINE"
+            exit 1
+        fi
         ;;
 esac
 if ! grub-mkconfig -o /boot/grub/grub.cfg; then
@@ -95,10 +99,10 @@ fi
 echo_finish "grub-install and grub-mkconfig"
 
 echo_start "pacman"
-INSTALL_PACKAGES=(zsh sudo vim vimpager git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget ctags yaourt rsync cmake clang python-pip)
+INSTALL_PACKAGES=(zsh sudo vim vimpager git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget ctags yaourt rsync cmake clang python-pip tree)
 
 #for X
-INSTALL_PACKAGES+=(xorg-server xorg-xinit rxvt-unicode i3-gaps i3lock i3status feh conky fcitx fcitx-table-extra fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 google-chrome dmenu otf-font-awesome compton)
+INSTALL_PACKAGES+=(xorg-server xorg-xinit rxvt-unicode i3-gaps i3lock feh conky fcitx fcitx-table-extra fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 google-chrome dmenu otf-font-awesome compton qtcreator)
 
 case $VIRTUAL_MACHINE in
     Hyper-V )
