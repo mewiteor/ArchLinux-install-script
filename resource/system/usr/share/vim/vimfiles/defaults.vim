@@ -28,6 +28,8 @@ set statusline=2
 
 " github
 " 'drmingdrmer/xptemplate'
+let g:xptemplate_vars = "author=mewiteor&email=mewiteor@hotmail.com"
+
 if has("Gui") || has("unix")
     " 'bling/vim-airline'
     " 'vim-airline/vim-airline-themes'
@@ -65,7 +67,7 @@ let g:licenses_authors_name = 'Mewiteor <mewiteor@hotmail.com>'
 let g:licenses_default_commands = ['gpl']
 
 " You Complete Me
-let g:ycm_global_ycm_extra_conf=$VIM."/vimfiles/.ycm_extra_conf.py"
+let g:ycm_global_ycm_extra_conf=$VIM."/vimfiles/ycm_extra_conf.py"
 
 if !exists("my_auto_commands_loaded")
     let my_auto_commands_loaded=1
@@ -93,5 +95,4 @@ if has('clipboard')
     vnoremap <A-x> "*d
     nnoremap <A-v> "*p
 endif
-let g:ycm_global_ycm_extra_conf=$VIM."/vimfiles/.ycm_extra_conf.py"
 set rtp+=$VIM/vimfiles/snippets
