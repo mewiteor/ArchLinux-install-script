@@ -93,3 +93,5 @@ if has('clipboard')
     vnoremap <A-x> "*d
     nnoremap <A-v> "*p
 endif
+let g:ycm_global_ycm_extra_conf=$VIM."/vimfiles/.ycm_extra_conf.py"
+set rtp+=$VIM/vimfiles/snippets
