@@ -43,7 +43,7 @@ case $PARTITION_MODE in
         ;;
 esac
 case $PARTITION_MODE in
-    USB_GPT | GPT)
+    USB_GPT | USB_Hybrid | GPT)
         INSTALL_PACKAGES+=(efibootmgr)
         ;;
 esac
@@ -76,6 +76,7 @@ if ! {
     rsync -avP $SCRIPT_DIR/root_install.sh $ROOT/root/root_install.sh &&
     mkdir -p $ROOT/root/tmp &&
     rsync -avP $SCRIPT_DIR/mew_install.sh $ROOT/root/tmp/mew_install.sh &&
+    rsync -avP $RESOURCE_DIR/prev_system/. $ROOT &&
     rsync -avP $RESOURCE_DIR/system $ROOT/root/tmp &&
     rsync -avP $RESOURCE_DIR/user $ROOT/root/tmp &&
     rsync -avP $RESOURCE_DIR/fonts $ROOT/root/tmp &&

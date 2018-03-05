@@ -8,7 +8,7 @@
 # device name, eg. /dev/sdX
 SD=${SD:-""}
 
-partition_modes=(USB_MBR USB_GPT MBR GPT BtrFS)
+partition_modes=(USB_MBR USB_GPT USB_Hybrid MBR GPT BtrFS)
 PARTITION_MODE=${PARTITION_MODE:-""}
 
 virtual_machines=(None Hyper-V Virtual-Box VMWare)
@@ -59,6 +59,9 @@ case $PARTITION_MODE in
         ;;
     USB_GPT)
         SUBDIR="usb_gpt"
+        ;;
+    USB_Hybrid)
+        SUBDIR="usb_hybrid"
         ;;
     MBR)
         SUBDIR="mbr"

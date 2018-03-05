@@ -1,0 +1,30 @@
+echo_start "make files $SD"
+if ! {
+    mkdir -p $ROOT &&
+    mount ${SD}3 $ROOT
+}; then
+    echo_err "mount ${SD}3"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $ROOT/efi &&
+    mount ${SD}2 $ROOT/efi
+}; then
+    echo_err "mount ${SD}2"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $ROOT/data &&
+    mount ${SD}2 $ROOT/data
+}; then
+    echo_err "mount ${SD}2"
+    exit 1
+fi
+
+echo_finish "make files $SD"
+
+exit 0
+
+# vim: ft=sh

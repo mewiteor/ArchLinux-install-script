@@ -1,0 +1,86 @@
+echo_start "parted ${SD}"
+cat << \EOF | gdisk /dev/sda
+
+o
+y
+n
+
+
++1M
+EF02
+n
+
+
++1024M
+0700
+n
+
+
++128M
+EF00
+n
+
+
+
+
+r
+h
+1 3 4
+n
+
+n
+
+n
+
+y
+x
+h
+w
+y
+EOF
+if [ $? -ne 0 ]; then
+    echo_err "parted"
+    exit 1
+fi
+echo_finish "parted ${SD}"
+
+echo_start "mkfs $SD"
+if ! {
+    mkfs.vfat -F32 -n "DATA" ${SD}2 &&
+    mkfs.vfat -F32 -n "EFI" ${SD}3 &&
+    mkfs.ext4 -F -L "Arch Linux" -O "^has_journal" ${SD}4
+}; then
+    echo_err "mkfs $SD"
+    exit 1
+fi
+echo_finish "mkfs $SD"
+
+echo_start "make files $SD"
+if ! {
+    mkdir -p $ROOT &&
+    mount ${SD}4 $ROOT
+}; then
+    echo_err "mount ${SD}4"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $ROOT/boot &&
+    mkdir -p $ROOT/efi &&
+    mount ${SD}3 $ROOT/efi
+}; then
+    echo_err "mount ${SD}3"
+    exit 1
+fi
+
+if ! {
+    mkdir -p $ROOT/data &&
+    mount ${SD}2 $ROOT/data
+}; then
+    echo_err "mount ${SD}2"
+    exit 1
+fi
+
+echo_finish "make files $SD"
+
+# vim: ft=sh

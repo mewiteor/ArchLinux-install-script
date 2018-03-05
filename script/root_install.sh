@@ -39,7 +39,7 @@ echo_finish "set localtime"
 
 echo_start "create ramdisk"
 case $PARTITION_MODE in
-    USB_MBR | USB_GPT )
+    USB_MBR | USB_GPT | USB_Hybrid )
         if ! sed -i 's/^HOOKS=(\(.*\)udev \(.*\) block\(.*\))$/HOOKS=(\1udev block \2\3)/g' /etc/mkinitcpio.conf; then
             echo_err "change /etc/mkinitcpio.conf"
             exit 1
@@ -63,20 +63,33 @@ echo_start "grub-install and grub-mkconfig"
 GRUB_INSTALL_COMMAND=":"
 case $PARTITION_MODE in
     USB_MBR | MBR | BtrFS)
-        GRUB_INSTALL_COMMAND="grub-install --target=i386-pc --recheck $SD"
+        if ! grub-install --target=i386-pc --recheck $SD; then
+            echo_err "grub-install"
+            exit 1
+        fi
         ;;
     USB_GPT | GPT)
-        GRUB_INSTALL_COMMAND="grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub --removable --recheck"
+        if ! grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub --removable --recheck; then
+            echo_err "grub-install"
+            exit 1
+        fi
+        ;;
+    USB_Hybrid)
+        if ! {
+            echo_info "install efi" &&
+            grub-install --target=x86_64-efi --efi-directory=/efi --boot-directory=/boot --removable --recheck &&
+            echo_info "install bios_grub" &&
+            grub-install --target=i386-pc --boot-directory=/boot --recheck $SD
+        }; then
+            echo_err "grub-install"
+            exit 1
+        fi
         ;;
     *)
         echo_err "unknown partition mode"
         exit 1
         ;;
 esac
-if ! $($GRUB_INSTALL_COMMAND); then
-    echo_err "grub-install"
-    exit 1
-fi
 case $VIRTUAL_MACHINE in
     Hyper-V )
         if ! sed -i 's/^\(GRUB_CMDLINE_LINUX_DEFAULT="\)\(.*\)"$/\1\2 video=hyperv_fb:'$VIRTUAL_MACHINE_RESOLUTION_RATIO'"/g' /etc/default/grub; then
@@ -92,6 +105,10 @@ case $VIRTUAL_MACHINE in
         fi
         ;;
 esac
+if ! echo 'GRUB_FORCE_HIDDEN_MENU="true"' >> /etc/default/grub; then
+    echo_err "grub config"
+    exit 1
+fi
 if ! grub-mkconfig -o /boot/grub/grub.cfg; then
     echo_err "grub-mkconfig"
     exit 1
@@ -99,10 +116,10 @@ fi
 echo_finish "grub-install and grub-mkconfig"
 
 echo_start "pacman"
-INSTALL_PACKAGES=(zsh sudo vim vimpager git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget ctags yaourt rsync cmake clang python-pip tree proxychains)
+INSTALL_PACKAGES=(zsh sudo vim vimpager git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget ctags yaourt rsync cmake clang python-pip tree proxychains ntfs-3g alsa-utils)
 
 #for X
-INSTALL_PACKAGES+=(xorg-server xorg-xinit rxvt-unicode i3-gaps i3lock feh conky fcitx fcitx-table-extra fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 google-chrome dmenu otf-font-awesome compton qtcreator shadowsocks-qt5)
+INSTALL_PACKAGES+=(xorg-server xorg-xinit rxvt-unicode i3-gaps i3lock feh conky fcitx fcitx-table-extra fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 google-chrome dmenu otf-font-awesome compton qtcreator shadowsocks-qt5 netease-cloud-music)
 
 case $VIRTUAL_MACHINE in
     Hyper-V )
@@ -114,7 +131,7 @@ case $VIRTUAL_MACHINE in
 esac
 case $VIRTUAL_MACHINE in
     Virtual-Box )
-        INSTALL_PACKAGES+=(virtualbox-guest-utils)
+        INSTALL_PACKAGES+=(virtualbox-guest-modules-arch virtualbox-guest-utils)
         ;;
 esac
 if ! {
