@@ -136,7 +136,7 @@ case $VIRTUAL_MACHINE in
 esac
 if ! {
     pacman -Syu &&
-    yes ' ' | pacman -S ${INSTALL_PACKAGES[@]}
+    pacman -S ${INSTALL_PACKAGES[@]} --noconfirm
 }; then
     echo_err "pacman"
     exit 1

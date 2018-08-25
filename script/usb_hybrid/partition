@@ -1,5 +1,5 @@
 echo_start "parted ${SD}"
-cat << \EOF | gdisk /dev/sda
+cat << \EOF | gdisk ${SD}
 
 o
 y
