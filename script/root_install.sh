@@ -145,7 +145,7 @@ echo "source \$VIM/vimrc" >> /etc/vimrc
 echo_finish "pacman"
 
 echo_start "pip"
-if ! pip install future frozendict requests; then
+if ! pip install future frozendict requests certifi; then
     echo_err "pip"
     exit 1
 fi
