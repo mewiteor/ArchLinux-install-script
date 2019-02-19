@@ -7,30 +7,3 @@
 [submodule "resource/user/.oh-my-zsh-custom/plugins/zsh-syntax-highlighting"]
 	path = resource/user/.oh-my-zsh-custom/plugins/zsh-syntax-highlighting
 	url = git://github.com/zsh-users/zsh-syntax-highlighting.git
-[submodule "resource/system/usr/share/vim/vimfiles/pack/plugins/start/xptemplate"]
-	path = resource/system/usr/share/vim/vimfiles/pack/plugins/start/xptemplate
-	url = https://github.com/drmingdrmer/xptemplate.git
-[submodule "resource/system/usr/share/vim/vimfiles/pack/plugins/start/vim-airline"]
-	path = resource/system/usr/share/vim/vimfiles/pack/plugins/start/vim-airline
-	url = https://github.com/vim-airline/vim-airline.git
-[submodule "resource/system/usr/share/vim/vimfiles/pack/plugins/start/vim-airline-themes"]
-	path = resource/system/usr/share/vim/vimfiles/pack/plugins/start/vim-airline-themes
-	url = https://github.com/vim-airline/vim-airline-themes.git
-[submodule "resource/system/usr/share/vim/vimfiles/pack/plugins/start/molokai"]
-	path = resource/system/usr/share/vim/vimfiles/pack/plugins/start/molokai
-	url = https://github.com/tomasr/molokai.git
-[submodule "resource/system/usr/share/vim/vimfiles/pack/plugins/start/vim-indent-guides"]
-	path = resource/system/usr/share/vim/vimfiles/pack/plugins/start/vim-indent-guides
-	url = https://github.com/nathanaelkane/vim-indent-guides.git
-[submodule "resource/system/usr/share/vim/vimfiles/pack/plugins/start/tagbar"]
-	path = resource/system/usr/share/vim/vimfiles/pack/plugins/start/tagbar
-	url = https://github.com/majutsushi/tagbar.git
-[submodule "resource/system/usr/share/vim/vimfiles/pack/plugins/start/nerdtree"]
-	path = resource/system/usr/share/vim/vimfiles/pack/plugins/start/nerdtree
-	url = https://github.com/scrooloose/nerdtree.git
-[submodule "resource/system/usr/share/vim/vimfiles/pack/plugins/start/vim-licenses"]
-	path = resource/system/usr/share/vim/vimfiles/pack/plugins/start/vim-licenses
-	url = https://github.com/antoyo/vim-licenses.git
-[submodule "resource/system/usr/share/vim/vimfiles/pack/plugins/start/YouCompleteMe"]
-	path = resource/system/usr/share/vim/vimfiles/pack/plugins/start/YouCompleteMe
-	url = https://github.com/Valloric/YouCompleteMe.git
