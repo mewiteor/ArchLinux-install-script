@@ -7,3 +7,6 @@
 [submodule "resource/user/.oh-my-zsh-custom/plugins/zsh-syntax-highlighting"]
 	path = resource/user/.oh-my-zsh-custom/plugins/zsh-syntax-highlighting
 	url = git://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "resource/system/usr/share/vim"]
+	path = resource/system/usr/share/vim
+	url = https://github.com/mewiteor/my-vim-configure.git
