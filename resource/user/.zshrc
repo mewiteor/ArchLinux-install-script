@@ -52,7 +52,7 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git vi-mode cp common-aliases dircycle dirhistory nyan)
+plugins=(git vi-mode cp common-aliases dircycle dirhistory)
 case $(cat /etc/issue | head -n1 | cut -f1 -d' ') in
     'Arch' )
         plugins+=(archlinux)
