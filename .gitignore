@@ -1,5 +1,6 @@
 # vim backup file
 *.un~
+.tags
 fonts.tar.xz
 user.tar.xz
 resource/fonts/*

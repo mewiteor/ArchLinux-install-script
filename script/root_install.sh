@@ -119,7 +119,7 @@ echo_start "pacman"
 INSTALL_PACKAGES=(zsh sudo vim vimpager git openssh networkmanager net-tools gnu-netcat tmux htop ranger moc mplayer wget ctags yaourt rsync cmake clang python-pip tree proxychains ntfs-3g alsa-utils)
 
 #for X
-INSTALL_PACKAGES+=(xorg-server xorg-xinit rxvt-unicode i3-gaps i3lock feh conky fcitx fcitx-table-extra fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 google-chrome dmenu otf-font-awesome compton qtcreator netease-cloud-music)
+INSTALL_PACKAGES+=(xorg-server xorg-xinit rxvt-unicode i3-gaps i3lock feh conky fcitx fcitx-table-extra fcitx-configtool fcitx-gtk2 fcitx-gtk3 fcitx-qt4 fcitx-qt5 google-chrome dmenu otf-font-awesome compton qtcreator netease-cloud-music youdao-dict)
 
 case $VIRTUAL_MACHINE in
     Hyper-V )
@@ -187,6 +187,9 @@ if ! {
     chown mewiteor:users /home/mewiteor/mew.sh &&
     chmod u+x /home/mewiteor/mew.sh &&
     rsync -avP --exclude "*.un~" /root/tmp/system/. / &&
+    pushd /usr/share/vim/vimfiles/init &&
+    bash bootstrap.sh &&
+    popd &&
     rsync -avP --exclude "*.un~"  /root/tmp/user/. /home/mewiteor &&
     mkdir -p /home/mewiteor/.local/share &&
     rsync -avP --exclude "*.un~"  /root/tmp/fonts /home/mewiteor/.local/share &&

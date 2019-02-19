@@ -27,24 +27,26 @@ fi
 
 echo_start "make mirrors"
 install_reflector () {
-    wget -O /tmp/reflector.tar.xz https://xyne.archlinux.ca/projects/reflector/src/reflector-${1}.tar.xz || return 1
-    wget -O /tmp/reflector.tar.xz.sig https://xyne.archlinux.ca/projects/reflector/src/reflector-${1}.tar.xz.sig || return 1
-    if ! gpg --verify /tmp/reflector.tar.xz.sig /tmp/reflector.tar.xz; then
-        local key=$(gpg --verify /tmp/reflector.tar.xz.sig /tmp/reflector.tar.xz 2>&1 | grep "RSA key" | awk  '{print $NF}') || return 1
-        gpg --recv-keys key || return 1
-    fi
-    gpg --verify /tmp/reflector.tar.xz.sig /tmp/reflector.tar.xz || return 1
-    rm -rf /tmp/reflector || return 1
-    mkdir -p /tmp/reflector || return 1
-    tar xpf /tmp/reflector.tar.xz -C /tmp/reflector --strip 1 || return 1
-    pushd /tmp/reflector || return 1
-    python setup.py install || return 1
-    popd || return 1
+    # wget -O /tmp/reflector.tar.xz https://xyne.archlinux.ca/projects/reflector/src/reflector-${1}.tar.xz || return 1
+    # wget -O /tmp/reflector.tar.xz.sig https://xyne.archlinux.ca/projects/reflector/src/reflector-${1}.tar.xz.sig || return 1
+    # if ! gpg --verify /tmp/reflector.tar.xz.sig /tmp/reflector.tar.xz; then
+    #     local key=$(gpg --verify /tmp/reflector.tar.xz.sig /tmp/reflector.tar.xz 2>&1 | grep "RSA key" | awk  '{print $NF}') || return 1
+    #     gpg --recv-keys $key || return 1
+    # fi
+    # gpg --verify /tmp/reflector.tar.xz.sig /tmp/reflector.tar.xz || return 1
+    # rm -rf /tmp/reflector || return 1
+    # mkdir -p /tmp/reflector || return 1
+    # tar xpf /tmp/reflector.tar.xz -C /tmp/reflector --strip 1 || return 1
+    # pushd /tmp/reflector || return 1
+    # python setup.py install || return 1
+    # popd || return 1
+    pacman -Sy &&
+    yes | pacman -S reflector &&
     reflector --verbose --country China -p http --sort rate --save /etc/pacman.d/mirrorlist || return 1
     return 0
 }
 if ! {
-    install_reflector 2018 &&
+    # install_reflector 2018 &&
     pacman -Syy &&
     pacman -S pacman-contrib --noconfirm &&
     rankmirrors $RESOURCE_DIR/archlinuxcn-mirrorlist > /etc/pacman.d/archlinuxcn-mirrorlist

@@ -14,6 +14,8 @@ else
     echo_finish "install fonts"
 fi
 
+exit 0
+
 echo_start "cmake ycmd"
 if ! {
     mkdir -p /dev/shm/build &&

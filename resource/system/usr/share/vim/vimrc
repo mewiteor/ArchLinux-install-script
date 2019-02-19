@@ -1,14 +1,3 @@
-" An example for a vimrc file.
-"
-" Maintainer:	Bram Moolenaar <Bram@vim.org>
-" Last change:	2016 Jul 28
-"
-" To use it, copy it to
-"     for Unix and OS/2:  ~/.vimrc
-"	      for Amiga:  s:.vimrc
-"  for MS-DOS and Win32:  $VIM\_vimrc
-"	    for OpenVMS:  sys$login:.vimrc
-
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
   finish
@@ -55,19 +44,6 @@ endif " has("autocmd")
 " compatible.
 if has('syntax') && has('eval')
   packadd matchit
-endif
-
-if has("multi_byte") 
-    " UTF-8 编码 
-    set encoding=utf-8 
-    set termencoding=utf-8 
-    set formatoptions+=mM 
-    set fencs=utf-8,gbk 
-    if v:lang =~? '^/(zh/)/|/(ja/)/|/(ko/)' 
-        set ambiwidth=double 
-    endif 
-else 
-    echoerr "Sorry, this version of (g)vim was not compiled with +multi_byte" 
 endif
 
 source $VIM/vimfiles/defaults.vim

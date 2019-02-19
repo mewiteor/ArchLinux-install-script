@@ -33,7 +33,7 @@ flags = [
 # a "-std=<something>".
 # For a C project, you would set this to something like 'c99' instead of
 # 'c++11'.
-'-std=c++11',
+'-std=c++17',
 # ...and the same thing goes for the magic -x option which specifies the
 # language that the files to be compiled are written in. This is mostly
 # relevant for c++ headers.
@@ -96,19 +96,24 @@ def GetCompilationInfoForFile( filename ):
 # This is the entry point; this function is called by ycmd to produce flags for
 # a file.
 def FlagsForFile( filename, **kwargs ):
-  if not database:
+    global database
+    if not database:
+        fps = os.path.split(filename)
+        if len(fps)!=2 or not os.path.exists(os.path.join(fps[0],'compile_commands.json')):
+            return {
+                  'flags': flags,
+                  'include_paths_relative_to_dir': DirectoryOfThisScript()
+                  }
+        else:
+            database = ycm_core.CompilationDatabase(fps[0])
+
+    compilation_info = GetCompilationInfoForFile( filename )
+    if not compilation_info:
+        return None
+
+    # Bear in mind that compilation_info.compiler_flags_ does NOT return a
+    # python list, but a "list-like" StringVec object.
     return {
-      'flags': flags,
-      'include_paths_relative_to_dir': DirectoryOfThisScript()
-    }
-
-  compilation_info = GetCompilationInfoForFile( filename )
-  if not compilation_info:
-    return None
-
-  # Bear in mind that compilation_info.compiler_flags_ does NOT return a
-  # python list, but a "list-like" StringVec object.
-  return {
-    'flags': list( compilation_info.compiler_flags_ ),
-    'include_paths_relative_to_dir': compilation_info.compiler_working_dir_
-  }
+          'flags': list( compilation_info.compiler_flags_ ),
+          'include_paths_relative_to_dir': compilation_info.compiler_working_dir_
+          }
