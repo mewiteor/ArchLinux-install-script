@@ -146,21 +146,21 @@ I3Bar =
 function conky_main()
     print("[")
     
+    local ifaces=conky_parse("${exec \"ls /sys/class/net | egrep '^(eth|wlan|enp|ens|wlp)'\"}")
     -- IP地址
-    -- local ifaces=conky_parse("${exec \"$(ls /sys/class/net | egrep '^(eth|wlan|enp|wlp)')\"}")
-    local ips = I3Bar:new(nil, "\xef\x82\xac "..conky_parse("${addr enp0s3}")..' / '..conky_parse("${texeci 60 curl -s icanhazip.com}"), "#b3d9ff")
+    local ips = I3Bar:new(nil, "\xef\x82\xac "..conky_parse("${addr "..ifaces.."}")..' / '..conky_parse("${texeci 60 curl -s icanhazip.com}"), "#b3d9ff")
     ips.name="net"
     ips.instance="net"
     ips:Print()
 
     -- 网速
-    local upspeed = I3Bar:new(nil, string.format("\xef\x81\xb7 %5s/s %5s",conky_parse("${upspeed enp0s3}"),conky_parse("${totalup enp0s3}")),"#809fff")
+    local upspeed = I3Bar:new(nil, string.format("\xef\x81\xb7 %5s/s %5s",conky_parse("${upspeed "..ifaces.."}"),conky_parse("${totalup "..ifaces.."}")),"#809fff")
     upspeed.name="netspeed"
     upspeed.instance="up"
     upspeed.min_width="\xef\x81\xb7 8.88B/s 88.8M"
     upspeed:Print()
 
-    local downspeed = I3Bar:new(nil, string.format("\xef\x81\xb8 %5s/s %5s",conky_parse("${downspeed enp0s3}"),conky_parse("${totaldown enp0s3}")),"#809fff")
+    local downspeed = I3Bar:new(nil, string.format("\xef\x81\xb8 %5s/s %5s",conky_parse("${downspeed "..ifaces.."}"),conky_parse("${totaldown "..ifaces.."}")),"#809fff")
     downspeed.name="netspeed"
     downspeed.instance="down"
     downspeed.min_width="\xef\x81\xb8 8.88B/s 88.8M"

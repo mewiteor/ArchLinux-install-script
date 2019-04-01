@@ -125,6 +125,9 @@ case $VIRTUAL_MACHINE in
     Hyper-V )
         INSTALL_PACKAGES+=(xf86-video-fbdev)
         ;;
+    VMWare )
+        INSTALL_PACKAGES+=(xf86-input-vmmouse xf86-video-vmware)
+        ;;
     * )
         INSTALL_PACKAGES+=(xf86-video-vesa)
         ;;
@@ -132,6 +135,9 @@ esac
 case $VIRTUAL_MACHINE in
     Virtual-Box )
         INSTALL_PACKAGES+=(virtualbox-guest-modules-arch virtualbox-guest-utils)
+        ;;
+    VMWare )
+        INSTALL_PACKAGES+=(open-vm-tools)
         ;;
 esac
 if ! {
@@ -167,6 +173,9 @@ services=(NetworkManager sshd)
 case $VIRTUAL_MACHINE in
     Virtual-Box )
         services+=(vboxservice.service)
+        ;;
+    VMWare )
+        services+=(vmtoolsd.service vmware-vmblock-fuse.service)
         ;;
 esac
 for serv in ${services[@]}; do
